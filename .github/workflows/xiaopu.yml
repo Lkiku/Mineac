@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Checkout
         run: |
-          git clone https://github.com/ziye12/JavaScript.git ~/JavaScript
+          git clone https://github.com/Lkiku/backup_ziye.git ~/backup_ziye
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
@@ -32,12 +32,12 @@ jobs:
       - name: npm install
         if: env.XP_refreshTOKEN
         run: |
-          cd ~/JavaScript
+          cd ~/backup_ziye
           npm install
       - name: '运行 【笑谱】'
         if: env.XP_refreshTOKEN
         run: |
-          cd ~/JavaScript
+          cd ~/backup_ziye
           node Task/iboxpay.js
         env:
 
