@@ -1,0 +1,48 @@
+name: example
+
+on:
+  workflow_dispatch:
+  schedule:
+     - cron: '*/30 0-15 * * *'
+  watch:
+    types: started
+
+env:
+  TZ: Asia/Shanghai    # 事实证明这个无用
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    env:
+        XP_refreshTOKEN: ${{ secrets.XP_refreshTOKEN }}
+        XP_CASH: ${{ secrets.XP_CASH }}
+        XP_live: ${{ secrets.XP_live }}
+        XP_phone: ${{ secrets.XP_phone }}
+        XP_sms: ${{ secrets.XP_sms }}
+    steps:
+      - name: Checkout   # 加入-b可以指定分支
+        run: |
+          git clone -b main https://github.com/Lkiku/backup_ziye.git ~/backup_ziye 
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: npm install
+        if: env.XP_refreshTOKEN
+        run: |
+          cd ~/backup_ziye
+          npm install
+      - name: '运行 example'
+        if: env.XP_refreshTOKEN
+        run: |
+          cd ~/backup_ziye
+          node Task/iboxpay.js
+        env:
+          PUSH_KEY: ${{ secrets.PUSH_KEY }}
+          BARK_PUSH: ${{ secrets.BARK_PUSH }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_USER_ID: ${{ secrets.TG_USER_ID }}
+          BARK_SOUND: ${{ secrets.BARK_SOUND }}
+          DD_BOT_TOKEN: ${{ secrets.DD_BOT_TOKEN }}
+          DD_BOT_SECRET: ${{ secrets.DD_BOT_SECRET }}
