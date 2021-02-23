@@ -1,4 +1,4 @@
-name: zhongqing
+name: 中青日常
 
 on:
   workflow_dispatch:

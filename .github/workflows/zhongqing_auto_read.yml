@@ -1,0 +1,69 @@
+name: 中青自动阅读
+
+on:
+  workflow_dispatch:
+  schedule:
+     - cron: '6 1-22/5 * * *'
+  watch:
+    types: started
+
+env:
+  TZ: Asia/Shanghai    # 事实证明这个无用
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    env:
+      YOUTH_READ: ${{ secrets.YOUTH_READ }}
+      YOUTH_READ2: ${{ secrets.YOUTH_READ2 }}
+      YOUTH_READ3: ${{ secrets.YOUTH_READ3 }}
+      YOUTH_READ4: ${{ secrets.YOUTH_READ4 }}
+    steps:
+      - name: Checkout   
+        run: |
+          git clone https://github.com/nekomiao123/youth_read_helper.git ~/youth_read_helper 
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: npm install
+        if: env.YOUTH_READ
+        run: |
+          cd ~/youth_read_helper
+          npm install
+      - name: '运行 【中青看点自动阅读一】'
+        if: env.YOUTH_READ
+        run: |
+          cd ~/youth_read_helper
+          node Task/Youth_Read.js
+        env:
+          YOUTH_READ: ${{ secrets.YOUTH_READ }}
+          YOUTH_ATIME: ${{ secrets.YOUTH_ATIME }}
+
+      - name: '运行 【中青看点自动阅读二】'
+        if: env.YOUTH_READ2
+        run: |
+          cd ~/youth_read_helper
+          node Task/Youth_Read.js
+        env:
+          YOUTH_READ: ${{ secrets.YOUTH_READ2 }}
+          YOUTH_ATIME: ${{ secrets.YOUTH_ATIME2 }}
+          
+      - name: '运行 【中青看点自动阅读三】'
+        if: env.YOUTH_READ3
+        run: |
+          cd ~/youth_read_helper
+          node Task/Youth_Read.js
+        env:
+          YOUTH_READ: ${{ secrets.YOUTH_READ3 }}
+          YOUTH_ATIME: ${{ secrets.YOUTH_ATIME3 }}
+          
+      - name: '运行 【中青看点自动阅读四】'
+        if: env.YOUTH_READ4
+        run: |
+          cd ~/youth_read_helper
+          node Task/Youth_Read.js
+        env:
+          YOUTH_READ: ${{ secrets.YOUTH_READ4 }}
+          YOUTH_ATIME: ${{ secrets.YOUTH_ATIME4 }}
