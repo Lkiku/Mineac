@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     env:
-        XP_iboxpayHEADER: ${{ secrets.XP_iboxpayHEADER }}
         XP_refreshTOKEN: ${{ secrets.XP_refreshTOKEN }}
         XP_CASH: ${{ secrets.XP_CASH }}
         XP_live: ${{ secrets.XP_live }}
@@ -24,7 +23,7 @@ jobs:
     steps:
       - name: Checkout
         run: |
-          git clone https://github.com/Lkiku/backup_ziye.git ~/backup_ziye
+          git clone -b master https://github.com/Lkiku/backup_ziye6666.git ~/backup_ziye6666
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
@@ -32,12 +31,12 @@ jobs:
       - name: npm install
         if: env.XP_refreshTOKEN
         run: |
-          cd ~/backup_ziye
+          cd ~/backup_ziye6666
           npm install
       - name: '运行 【笑谱】'
         if: env.XP_refreshTOKEN
         run: |
-          cd ~/backup_ziye
+          cd ~/backup_ziye6666
           node Task/iboxpay.js
         env:
 
